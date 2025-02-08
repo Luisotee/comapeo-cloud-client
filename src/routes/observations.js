@@ -96,6 +96,7 @@ export default async function observationRoutes(
       response: {
         200: Type.Object({
           versionId: Type.String(),
+          docId: Type.String(), // Add docId to response schema
         }),
         '4xx': schemas.errorResponse,
       },
@@ -218,7 +219,11 @@ export default async function observationRoutes(
         },
       }
 
-      return await project.observation.create(observationData)
+      const result = await project.observation.create(observationData)
+      return {
+        versionId: result.versionId,
+        docId: result.docId,
+      }
     },
   })
   fastify.delete('/projects/:projectPublicId/observations/:observationId', {
